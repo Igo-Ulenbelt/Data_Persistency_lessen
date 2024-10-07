@@ -3,12 +3,15 @@ package opdracht;
 
 import opdracht.DAOHibernate.AdresDAOHibernate;
 import opdracht.DAOHibernate.OvchipkaartDAOHibernate;
+import opdracht.DAOHibernate.ProductDAOHibernate;
+import opdracht.DAOHibernate.ReizigerDAOHibernate;
 import opdracht.dao.AdresDAO;
 import opdracht.dao.OvchipkaartDAO;
-import opdracht.domain.Ovchipkaart;
-import opdracht.domain.Reiziger;
+import opdracht.dao.ProductDAO;
 import opdracht.dao.ReizigerDAO;
-import opdracht.DAOHibernate.ReizigerDAOHibernate;
+import opdracht.domain.Ovchipkaart;
+import opdracht.domain.Product;
+import opdracht.domain.Reiziger;
 import project.domain.Adres;
 
 import javax.persistence.EntityManager;
@@ -28,10 +31,12 @@ public class Main {
         ReizigerDAO reizigerDAO = new ReizigerDAOHibernate(entityManager);
         AdresDAO adresDAO = new AdresDAOHibernate(entityManager);
         OvchipkaartDAO ovchipkaartDAO = new OvchipkaartDAOHibernate(entityManager);
+        ProductDAO productDAO = new ProductDAOHibernate(entityManager);
         // Test DAO's
         testReizigerDAO(reizigerDAO, adresDAO);
         testAdresDAO(adresDAO, reizigerDAO);
         testOvchipkaartDAO(ovchipkaartDAO, reizigerDAO);
+        testProductDAO(productDAO, ovchipkaartDAO);
 
         entityManager.close();
         entityManagerFactory.close();
@@ -53,7 +58,7 @@ public class Main {
         // Maak een nieuwe reiziger aan en persisteer deze in de database
         String gbdatum = "1981-03-14";
         Reiziger sietske = new Reiziger(77, "S", "", "Boers", java.sql.Date.valueOf(gbdatum), adres1, null);
-        System.out.print("\n[Test] Eerst " + reizigers.size() + " reizigers, na ReizigerDAO.save() ");
+        System.out.print("[Test] Eerst " + reizigers.size() + " reizigers, na ReizigerDAO.save() ");
         rdao.save(sietske);
         reizigers = rdao.findAll();
         System.out.println(reizigers.size() + " reizigers");
@@ -138,5 +143,67 @@ public class Main {
             System.out.println("Geen ovchipkaarten gevonden");
         }
     }
+
+    private static void testProductDAO(ProductDAO rdao, OvchipkaartDAO ovchipkaartDAO) throws SQLException {
+        System.out.println("\n---------- Test ProductDAO -------------");
+        List<Product> products = rdao.findAll();
+        System.out.println("[Test] ProductDAO.findAll() geeft de volgende producten:");
+        for (Product p : products) {
+            System.out.println(p);
+        }
+
+        // Maak een nieuwe product aan en persisteer deze in de database
+        Product product = new Product(78, "Test", "Test", 10.0);
+        System.out.print("[Test] Eerst " + products.size() + " producten, na ProductDAO.save() ");
+        rdao.save(product);
+        products = rdao.findAll();
+        System.out.println(products.size() + " producten");
+        System.out.println("[Test] ProductDAO.save() heeft deze product toegevoegd:");
+        System.out.println(product);
+
+        // Update product
+        product.setNaam("Test2");
+        rdao.update(product);
+        products = rdao.findAll();
+        System.out.println("[Test] ProductDAO.update() heeft de naam van de product aangepast:");
+        System.out.println(products.get(products.size() - 1));
+
+        // Delete product
+        System.out.print("[Test] Eerst " + products.size() + " producten, na ProductDAO.delete() ");
+        rdao.delete(product);
+        products = rdao.findAll();
+        System.out.println(products.size() + " producten");
+
+        //add ovchipkaart to product
+        Ovchipkaart ovchipkaart = ovchipkaartDAO.findById(35283);
+        System.out.println("[Test] ProductDAO.addOVChipkaart() geeft de volgende producten:");
+        if(rdao.addOVChipkaart(product, ovchipkaart)) {
+            System.out.println("Ovchipkaart toegevoegd aan product");
+        } else {
+            System.out.println("Ovchipkaart niet toegevoegd aan product");
+        }
+
+//        get producten by ovchipkaarten
+        System.out.println("[Test] ProductDAO.findByOvchipkaart() geeft de volgende producten:");
+        List<Product> productenByOvchipkaart = rdao.findByOvchipkaart(ovchipkaart);
+        if(productenByOvchipkaart != null) {
+            for (Product p : productenByOvchipkaart) {
+                System.out.println(p);
+            }
+        } else {
+            System.out.println("Geen producten gevonden");
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
 

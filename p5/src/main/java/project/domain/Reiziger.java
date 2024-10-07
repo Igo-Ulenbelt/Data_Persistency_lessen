@@ -1,38 +1,23 @@
-package opdracht.domain;
+package project.domain;
 
-import javax.persistence.*;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import project.domain.Adres;
 
-@Entity
 public class Reiziger {
     // Attributes
-    @Id
-    @Column(name = "reiziger_id")
     private int id;
     private String voorletters;
     private String tussenvoegsel;
     private String achternaam;
     private Date geboortedatum;
-    @OneToOne
-    @JoinColumn(name = "adres_id")
-    private Adres adres;
-    @OneToMany
-    @JoinColumn(name = "ov_chipkaart")
-    private List<Ovchipkaart> ovChipkaarten;
 
     // Constructors
 
-    public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, Date geboortedatum, Adres adres, List<Ovchipkaart> ovChipkaarten) {
+    public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, Date geboortedatum) {
         this.id = id;
         this.voorletters = voorletters;
         this.tussenvoegsel = tussenvoegsel;
         this.achternaam = achternaam;
         this.geboortedatum = geboortedatum;
-        this.adres = adres;
-        this.ovChipkaarten = ovChipkaarten;
     }
 
     public Reiziger() {
@@ -88,13 +73,7 @@ public class Reiziger {
     // toString method
     @Override
     public String toString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        String formattedDate = (geboortedatum != null) ? dateFormat.format(geboortedatum) : "geen datum";
-
-        return "#" + id + ": " + getNaam() + ", geb. " + formattedDate +
-                ", adres {" + (adres != null ? "#" + adres.getId() + " " + adres.getPostcode() + " " + adres.getHuisnummer() : "geen adres") + "}, \n";
+        return this.getNaam() + " (" + geboortedatum + ") \n";
     }
-
 }
 

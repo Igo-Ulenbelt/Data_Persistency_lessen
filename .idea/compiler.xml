@@ -8,8 +8,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="p3" />
         <module name="p3h" />
+        <module name="p3h (3)" />
         <module name="p3h (1)" />
         <module name="p3h (2)" />
+        <module name="p3 (2)" />
+        <module name="p3 (1)" />
       </profile>
     </annotationProcessing>
   </component>
