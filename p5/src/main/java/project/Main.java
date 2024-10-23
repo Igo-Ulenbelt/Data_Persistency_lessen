@@ -32,10 +32,7 @@ public class Main {
         ProductDAO productDao = new ProductDAOsql(connection);
 
         // Test DAO's
-        testReizigerDAO(reizigerDAO);
-        testAdresDAO(adresDAO, reizigerDAO);
-        testOvchipkaartDAO(ovchipkaartDAO, reizigerDAO);
-        testProductDAO(productDao, ovchipkaartDAO);
+        testCodeDAO(reizigerDAO, adresDAO, ovchipkaartDAO, productDao);
 
         closeConnection();
     }
@@ -54,151 +51,76 @@ public class Main {
         }
     }
 
-    // Test the ReizigerDAO
-    public static void testReizigerDAO(ReizigerDAO reizigerDAO) {
-        System.out.println("---- Test ReizigerDAO ----");
+    // Test code
+    public static void testCodeDAO(ReizigerDAO reizigerDAO, AdresDAO adresDAO, OvchipkaartDAO ovchipkaartDAO, ProductDAO productdao) {
+        Reiziger harry = new Reiziger(77, "H", "", "Boers", java.sql.Date.valueOf("1983-04-13"));
+        Adres harrysAdres = new Adres(77, "8014EP", "10bis", "Tuinmeesterlaan", "Dalfsen", harry);
+        harry.setAdres(harrysAdres);
+        harry.getAdres();
 
-        // Test findAll method
-        System.out.println("Testing findAll()");
+        Ovchipkaart harryOvkaart1 = new Ovchipkaart(77777, java.sql.Date.valueOf("2020-02-22"), 2, (float) 87.88, harry);
+        Ovchipkaart harryOvkaart2 = new Ovchipkaart(77778, java.sql.Date.valueOf("2021-01-11"), 1, (float) 12.23, harry);
+
+        Product dagkaartKind = new Product(102, "Dagkaart hond", "De hele dag op pad met je kleine monstertje", (float) 4.00);
+        Product dagkaartBaby = new Product(103, "Dagkaart baby", "De hele dag op pad met je lieve baby", (float) 16.90);
+
+        reizigerDAO.save(harry);
+        adresDAO.save(harrysAdres);
+        ovchipkaartDAO.save(harryOvkaart1);
+        ovchipkaartDAO.save(harryOvkaart2);
+        productdao.save(dagkaartKind);
+        productdao.save(dagkaartBaby);
+
+        productdao.addOVChipkaart(dagkaartKind, harryOvkaart1, "status");
+        productdao.addOVChipkaart(dagkaartBaby, harryOvkaart1, "status");
+        productdao.addOVChipkaart(dagkaartBaby, harryOvkaart2, "status");
+        System.out.println("[Test] ReizigerDAO.save() & AdresDAO.save() & OvchipkaartDAO.save() & ProductDAO.save() werkt");
+
+        harry.setAchternaam("Boers2");
+        harrysAdres.setWoonplaats("Zwolle");
+        harryOvkaart1.setSaldo((float) 100.00);
+        dagkaartKind.setPrijs((float) 5.00);
+
+        reizigerDAO.update(harry);
+        adresDAO.update(harrysAdres);
+        ovchipkaartDAO.update(harryOvkaart1);
+        productdao.update(dagkaartKind);
+        System.out.println("[Test] ReizigerDAO.update() & AdresDAO.update() & OvchipkaartDAO.update() & ProductDAO.update() werkt");
+
         List<Reiziger> reizigers = reizigerDAO.findAll();
+
+        System.out.println("[Test] ReizigerDAO.findAll() geeft de volgende reizigers:" );
+
         for (Reiziger r : reizigers) {
-            System.out.print(r);
-        }
+            r.setAdres(adresDAO.findByReiziger(r));
+            List<Ovchipkaart> ovchipkaart = ovchipkaartDAO.findByReiziger(r);
+            r.setOvchipkaarten(ovchipkaart);
 
-        // Test findById method
-        System.out.println("\nTesting findById(1)");
-        Reiziger reiziger = reizigerDAO.findById(1);
-        if (reiziger != null) {
-            System.out.print(reiziger);
-        } else {
-            System.out.println("Reiziger niet gevonden.");
-        }
-
-        // Test save method
-        System.out.println("\nTesting save()");
-        Reiziger newReiziger = new Reiziger(6, "J", null, "Janssen", Date.valueOf("1990-12-10"));
-        boolean saved = reizigerDAO.save(newReiziger);
-        System.out.println("Reiziger saved: " + saved);
-
-        // Test update method
-        System.out.println("\nTesting update()");
-        newReiziger.setAchternaam("Jansen");
-        boolean updated = reizigerDAO.update(newReiziger);
-        System.out.println("Reiziger updated: " + updated);
-
-        // Test delete method
-        System.out.println("\nTesting delete()");
-        boolean deleted = reizigerDAO.delete(newReiziger);
-        System.out.println("Reiziger deleted: " + deleted + "\n");
-    }
-
-    public static void testAdresDAO(AdresDAO adresDAO, ReizigerDAO reizigerDAO) {
-        System.out.println("---- Test AdresDAO ----");
-
-        System.out.println("Testing findAll()");
-        List<Adres> adressen = adresDAO.findAll();
-        for (Adres adres : adressen) {
-            System.out.print(adres);
-        }
-
-        // Test findByReiziger method
-        System.out.println("\nTesting findByReiziger()");
-        Reiziger reiziger = reizigerDAO.findById(1);
-        if (reiziger != null) {
-            Adres adres = adresDAO.findByReiziger(reiziger);
-            System.out.print(adres);
-        } else {
-            System.out.print("Reiziger niet gevonden.");
-        }
-
-        // Test save method
-        System.out.println("\nTesting save()");
-        Reiziger newReiziger = new Reiziger(6, "J", null, "Janssen", Date.valueOf("1990-12-10"));
-        reizigerDAO.save(newReiziger);
-        Adres newAdres = new Adres(5, "1234AB", "10", "Hoofdstraat", "Utrecht", newReiziger);
-        boolean saved = adresDAO.save(newAdres);
-        System.out.println("Adres saved: " + saved);
-
-        // Test update method
-        System.out.println("\nTesting update()");
-        newAdres.setWoonplaats("Amsterdam");
-        boolean updated = adresDAO.update(newAdres);
-        System.out.println("Adres updated: " + updated);
-
-        // Test delete method
-        System.out.println("\nTesting delete()");
-        boolean deleted = adresDAO.delete(newAdres);
-        System.out.println("Adres deleted: " + deleted);
-
-        // delete reiziger
-         reizigerDAO.delete(newReiziger);
-    }
-
-    // Test the OVChipkaartDAO
-    public static void testOvchipkaartDAO(OvchipkaartDAO ovChipkaartDAO, ReizigerDAO reizigerDAO) {
-        System.out.println("\n---- Test OVChipkaartDAO ----\n");
-
-        // Find OVChipkaart by reiziger
-        Reiziger reiziger = reizigerDAO.findById(2);
-        System.out.println("Finding OVChipkaarten for reiziger with id 2: ");
-        List<Ovchipkaart> ovchipkaarten = ovChipkaartDAO.findByReiziger(reiziger);
-        if(ovchipkaarten.size() == 0) {
-            System.out.println("No OVChipkaarten found for reiziger with id 2.");
-        }else{
-            for (Ovchipkaart ovchipkaart : ovchipkaarten) {
-                System.out.println(ovchipkaart);
+            for (Ovchipkaart ov : ovchipkaart) {
+                ov.setProducten(productdao.findByOVChipkaart(ov));
             }
+
+            System.out.println(r + " ");
         }
-    }
+        System.out.println();
+        List<Product> producten = productdao.findAll();
+        System.out.println("[Test] ProductDAO.findAll() geeft de volgende producten:");
 
-    private static void testProductDAO(ProductDAO productDao, OvchipkaartDAO ovchipkaartDAO) {
-        System.out.println("---- Test ProductDAO ----");
-
-        // Test findByOVChipkaart method
-        System.out.println("Testing findByOVChipkaart()");
-        Ovchipkaart ovChipkaart = ovchipkaartDAO.findById(35283);
-        List<Product> producten = productDao.findByOVChipkaart(ovChipkaart);
-        if (producten.size() == 0) {
-            System.out.println("No products found for ovchipkaart with id 35283.");
-        } else {
-            for (Product product : producten) {
-                System.out.println(product);
-            }
+        for (Product p : producten) {
+            System.out.print(p);
         }
 
-        // Test save method
-        System.out.println("Testing save()");
-        Product newProduct = new Product(8, "Test", "Test product", 10.0);
-        boolean saved = productDao.save(newProduct);
-        System.out.println("Product saved: " + saved);
+        productdao.deleteFromManyToMany(dagkaartKind);
+        productdao.deleteFromManyToMany(dagkaartBaby);
+        productdao.delete(dagkaartKind);
+        productdao.delete(dagkaartBaby);
 
-        // Test update method
-        System.out.println("Testing update()");
-        newProduct.setNaam("Test product");
-        boolean updated = productDao.update(newProduct);
-        System.out.println("Product updated: " + newProduct);
-
-        // Test addOVChipkaart method
-        System.out.println("Testing addOVChipkaart()");
-        Ovchipkaart ovchipkaart = ovchipkaartDAO.findById(35283);
-        boolean added = productDao.addOVChipkaart(newProduct, ovchipkaart, "actief");
-        System.out.println("Product added to ovchipkaart: " + added);
-
-        // Test deleteFromManyToMany method
-        System.out.println("Testing deleteFromManyToMany()");
-        boolean deletedFromManyToMany = productDao.deleteFromManyToMany(newProduct);
-        System.out.println("Product deleted from many to many table: " + deletedFromManyToMany);
-
-        // Test delete method
-        System.out.println("Testing delete()");
-        boolean deleted = productDao.delete(newProduct);
-        System.out.println("Product deleted: " + deleted);
-
-//        find all
-        System.out.println("Testing findAll()");
-        List<Product> producten1 = productDao.findAll();
-        for (Product product : producten1) {
-            System.out.println(product);
-        }
+        adresDAO.delete(harrysAdres);
+        ovchipkaartDAO.delete(harryOvkaart1);
+        ovchipkaartDAO.delete(harryOvkaart2);
+        reizigerDAO.delete(harry);
+        System.out.println("\n\n[Test] ReizigerDAO.delete() & AdresDAO.delete() & OvchipkaartDAO.delete() & ProductDAO.delete() werkt");
     }
 }
+
+

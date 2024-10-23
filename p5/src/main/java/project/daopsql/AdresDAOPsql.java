@@ -95,7 +95,12 @@ public class AdresDAOPsql implements AdresDAO {
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            return false;
+            if (e.getSQLState().equals("23505")) {
+                System.out.println("Fout: Product met nummer " + adres.getId() + " bestaat al.");
+                return false;
+            } else {
+                throw new RuntimeException(e);
+            }
         }
     }
 

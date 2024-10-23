@@ -1,10 +1,13 @@
 package project.domain;
 
+import java.util.List;
+
 public class Product {
     private int productNummer;
     private String naam;
     private String beschrijving;
     private double prijs;
+    private List<Ovchipkaart> ovchipkaart;
 
     public Product(int productNummer, String productNaam, String beschrijving, double prijs) {
         this.productNummer = productNummer;
@@ -45,13 +48,24 @@ public class Product {
         this.prijs = prijs;
     }
 
+    public List<Ovchipkaart> getOvchipkaart() {
+        return ovchipkaart;
+    }
+
+    public void setOvchipkaart(List<Ovchipkaart> ovchipkaart) {
+        this.ovchipkaart = ovchipkaart;
+    }
+
+    public void addOvchipkaart(Ovchipkaart ovchipkaart) {
+        this.ovchipkaart.add(ovchipkaart);
+    }
+
     @Override
     public String toString() {
-        return "Product{" +
+        return "\nProduct: " +
                 "productNummer=" + productNummer +
                 ", productNaam='" + naam + '\'' +
                 ", beschrijving='" + beschrijving + '\'' +
-                ", prijs=" + prijs +
-                '}';
+                ", prijs=" + prijs;
     }
 }

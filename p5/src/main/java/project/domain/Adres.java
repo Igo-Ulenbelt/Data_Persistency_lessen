@@ -72,7 +72,7 @@ public class Adres {
 
     @Override
     public String toString() {
-        return postcode + " " + huisnummer + ", " + straat + ", " + woonplaats + " (Reiziger: " + reiziger.getNaam() + ")\n";
+        return "Adres: " + postcode + " " + huisnummer + ", " + straat + ", " + woonplaats + " (Reiziger: " + reiziger.getNaam() + ")";
     }
 }
 

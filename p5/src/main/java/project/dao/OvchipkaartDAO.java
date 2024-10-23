@@ -10,4 +10,11 @@ public interface OvchipkaartDAO {
     List<Ovchipkaart> findByReiziger(Reiziger reiziger);
 
     Ovchipkaart findById(int id);
+
+    boolean save(Ovchipkaart harryOvkaart1);
+
+    boolean update(Ovchipkaart harryOvkaart1);
+
+    boolean delete(Ovchipkaart harryOvkaart1);
+
 }

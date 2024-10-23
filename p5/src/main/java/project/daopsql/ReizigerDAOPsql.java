@@ -84,8 +84,12 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            if (e.getSQLState().equals("23505")) {
+                System.out.println("Fout: Reiziger met naam " + reiziger.getNaam() + " bestaat al.");
+                return false;
+            } else {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -123,4 +127,14 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
 

@@ -4,10 +4,7 @@ import project.dao.ProductDAO;
 import project.domain.Ovchipkaart;
 import project.domain.Product;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +82,12 @@ public class ProductDAOsql implements ProductDAO {
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            if (e.getSQLState().equals("23505")) {
+                System.out.println("Fout: Relatie tussen product " + product.getNaam() + " en ov-chipkaart " + ovChipkaart.getId() + " bestaat al.");
+                return false;
+            } else {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -101,7 +103,12 @@ public class ProductDAOsql implements ProductDAO {
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            if (e.getSQLState().equals("23505")) {
+                System.out.println("Fout: Product met nummer " + product.getNummer() + " bestaat al.");
+                return false;
+            } else {
+                throw new RuntimeException(e);
+            }
         }
     }
 

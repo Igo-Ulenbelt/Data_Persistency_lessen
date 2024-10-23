@@ -1,6 +1,8 @@
 package project.domain;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.sql.Date;
+import java.util.List;
 
 public class Ovchipkaart {
     public int id;
@@ -8,6 +10,7 @@ public class Ovchipkaart {
     public int klasse;
     public double saldo;
     public Reiziger reiziger;
+    public List<Product> producten;
 
     public Ovchipkaart(int id, Date geldigTot, int klasse, double saldo, Reiziger reiziger) {
         this.id = id;
@@ -15,6 +18,7 @@ public class Ovchipkaart {
         this.klasse = klasse;
         this.saldo = saldo;
         this.reiziger = reiziger;
+        this.producten = new ArrayList<>();
     }
 
     public Ovchipkaart() {
@@ -60,13 +64,33 @@ public class Ovchipkaart {
         this.reiziger = reiziger;
     }
 
+    public void addProduct(Product product) {
+        producten.add(product);
+    }
+
+    public String getProductenString() {
+        String productenString = "";
+        if (producten.size() > 0) {
+            for (Product product : producten) {
+                productenString += product.toString();
+            }
+        } else {
+            productenString = "Geen producten gevonden";
+        }
+        return productenString;
+    }
+
+    public void setProducten(List<Product> byOVChipkaart) {
+        this.producten = byOVChipkaart;
+    }
+
     @Override
     public String toString() {
-        return "Ovchipkaart" +
+        return "\nOvchipkaart: " +
                 "id=" + id +
                 ", geldigTot='" + geldigTot + '\'' +
                 ", klasse=" + klasse +
                 ", saldo=" + saldo +
-                ", reiziger=" + reiziger;
+                ", reiziger=" + reiziger.getNaam() + getProductenString();
     }
 }

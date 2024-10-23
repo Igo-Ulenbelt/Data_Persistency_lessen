@@ -1,6 +1,8 @@
 package project.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Reiziger {
     // Attributes
@@ -9,6 +11,8 @@ public class Reiziger {
     private String tussenvoegsel;
     private String achternaam;
     private Date geboortedatum;
+    private Adres adres;
+    private List<Ovchipkaart> ovchipkaarten;
 
     // Constructors
 
@@ -18,6 +22,7 @@ public class Reiziger {
         this.tussenvoegsel = tussenvoegsel;
         this.achternaam = achternaam;
         this.geboortedatum = geboortedatum;
+        this.ovchipkaarten = new ArrayList<>();
     }
 
     public Reiziger() {
@@ -64,16 +69,60 @@ public class Reiziger {
         this.geboortedatum = geboortedatum;
     }
 
+    public Adres getAdres() {
+        return adres;
+    }
+
+    public void setAdres(Adres adres) {
+        this.adres = adres;
+    }
+
+    public List<Ovchipkaart> getOvchipkaarten() {
+        return ovchipkaarten;
+    }
+
+    public void setOvchipkaarten(List<Ovchipkaart> byReiziger) {
+        this.ovchipkaarten = byReiziger;
+    }
+
+    // add an ovchipkaart to the reiziger
+    public void addOVChipkaart(Ovchipkaart ovchipkaart) {
+        this.ovchipkaarten.add(ovchipkaart);
+    }
+
     // returns the full name of the reiziger with the format: "voorletters tussenvoegsel achternaam"
     public String getNaam() {
         String tsnvgsl = (tussenvoegsel == null || tussenvoegsel.isEmpty()) ? "" : tussenvoegsel + " ";
         return voorletters + " " + tsnvgsl + achternaam;
     }
 
-    // toString method
+    // returns the address of the reiziger as a string
+    public String getAdresToString() {
+        String adresString;
+        if (this.adres != null) {
+            adresString = this.adres.toString();
+        } else {
+            adresString = "Adres niet beschikbaar";
+        }
+        return adresString;
+    }
+
+    // returns the ovchipkaarten of the reiziger as a string
+    public String getOvchipkaartenString() {
+        String ovchipkaartenString = "";
+        if (ovchipkaarten.size() > 0) {
+            for (Ovchipkaart ovchipkaart : ovchipkaarten) {
+                ovchipkaartenString += ovchipkaart.toString();
+            }
+        } else {
+            ovchipkaartenString = "Geen OV-chipkaarten gevonden";
+        }
+        return ovchipkaartenString;
+    }
+
     @Override
     public String toString() {
-        return this.getNaam() + " (" + geboortedatum + ") \n";
+        return "\nReiziger: " + getNaam() + " (" + geboortedatum + ")\n" + getAdresToString() + getOvchipkaartenString();
     }
 }
 

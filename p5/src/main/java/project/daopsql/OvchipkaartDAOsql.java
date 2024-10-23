@@ -72,4 +72,56 @@ public class OvchipkaartDAOsql implements project.dao.OvchipkaartDAO {
         }
         return null;
     }
+
+    // Save
+    public boolean save(Ovchipkaart ovchipkaart) {
+        String query = "INSERT INTO ov_chipkaart (kaart_nummer, geldig_tot, klasse, saldo, reiziger_id) VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, ovchipkaart.getId());
+            statement.setDate(2, ovchipkaart.getGeldigTot());
+            statement.setInt(3, ovchipkaart.getKlasse());
+            statement.setDouble(4, ovchipkaart.getSaldo());
+            statement.setInt(5, ovchipkaart.getReiziger().getId());
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            if (e.getSQLState().equals("23505")) {
+                System.out.println("Fout: ovchipkaart met nummer " + ovchipkaart.getId() + " bestaat al.");
+                return false;
+            } else {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    // Update
+    public boolean update(Ovchipkaart ovchipkaart) {
+        String query = "UPDATE ov_chipkaart SET geldig_tot = ?, klasse = ?, saldo = ?, reiziger_id = ? WHERE kaart_nummer = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setDate(1, ovchipkaart.getGeldigTot());
+            statement.setInt(2, ovchipkaart.getKlasse());
+            statement.setDouble(3, ovchipkaart.getSaldo());
+            statement.setInt(4, ovchipkaart.getReiziger().getId());
+            statement.setInt(5, ovchipkaart.getId());
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Delete
+    public boolean delete(Ovchipkaart ovchipkaart) {
+        String query = "DELETE FROM ov_chipkaart WHERE kaart_nummer = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, ovchipkaart.getId());
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
