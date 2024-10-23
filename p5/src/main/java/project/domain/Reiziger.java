@@ -115,7 +115,7 @@ public class Reiziger {
                 ovchipkaartenString += ovchipkaart.toString();
             }
         } else {
-            ovchipkaartenString = "Geen OV-chipkaarten gevonden";
+            ovchipkaartenString = "\nGeen OV-chipkaarten gevonden";
         }
         return ovchipkaartenString;
     }

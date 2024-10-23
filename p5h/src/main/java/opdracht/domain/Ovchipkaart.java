@@ -2,6 +2,7 @@ package opdracht.domain;
 import opdracht.domain.Reiziger;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class Ovchipkaart {
         this.klasse = klasse;
         this.saldo = saldo;
         this.reiziger = reiziger;
+        this.producten = new ArrayList<>();
     }
 
     public Ovchipkaart() {
@@ -40,11 +42,11 @@ public class Ovchipkaart {
         this.id = id;
     }
 
-    public Date getGeldigTot() {
-        return geldigTot;
+    public java.sql.Date getGeldigTot() {
+        return (java.sql.Date) geldigTot;
     }
 
-    public void setGeldigTot(Date geldigTot) {
+    public void setGeldigTot(java.sql.Date geldigTot) {
         this.geldigTot = geldigTot;
     }
 
@@ -72,18 +74,38 @@ public class Ovchipkaart {
         this.reiziger = reiziger;
     }
 
+    public void addProduct(Product product) {
+        producten.add(product);
+    }
+
+    public String getProductenString() {
+        String productenString = "";
+        if (producten != null) {
+            for (Product product : producten) {
+                productenString += product.toString();
+            }
+        } else {
+            productenString = "\nGeen producten gevonden";
+        }
+        return productenString;
+    }
+
     public List<Product> getProducten() {
         return producten;
     }
 
+    public void setProducten(List<Product> producten) {
+        this.producten = producten;
+    }
+
     @Override
     public String toString() {
-        return "Ovchipkaart" +
+        return "\nOvchipkaart: " +
                 "id=" + id +
                 ", geldigTot='" + geldigTot + '\'' +
                 ", klasse=" + klasse +
                 ", saldo=" + saldo +
-                ", reiziger=" + reiziger;
+                ", reiziger=" + reiziger.getNaam() + getProductenString();
     }
 }
 

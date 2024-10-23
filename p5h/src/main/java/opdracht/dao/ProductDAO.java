@@ -13,4 +13,8 @@ public interface ProductDAO {
     Product save(Product product);
     Product update(Product product);
     boolean delete(Product product);
+
+    Product findById(int i);
+
+    void deleteFromManyToMany(Product product);
 }

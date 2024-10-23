@@ -1,5 +1,6 @@
 package project.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
@@ -7,13 +8,14 @@ public class Product {
     private String naam;
     private String beschrijving;
     private double prijs;
-    private List<Ovchipkaart> ovchipkaart;
+    private List<Ovchipkaart> ovchipkaarten;
 
     public Product(int productNummer, String productNaam, String beschrijving, double prijs) {
         this.productNummer = productNummer;
         this.naam = productNaam;
         this.beschrijving = beschrijving;
         this.prijs = prijs;
+        this.ovchipkaarten = new ArrayList<>();
     }
 
     public int getNummer() {
@@ -48,16 +50,16 @@ public class Product {
         this.prijs = prijs;
     }
 
-    public List<Ovchipkaart> getOvchipkaart() {
-        return ovchipkaart;
+    public List<Ovchipkaart> getOvchipkaarten() {
+        return ovchipkaarten;
     }
 
-    public void setOvchipkaart(List<Ovchipkaart> ovchipkaart) {
-        this.ovchipkaart = ovchipkaart;
+    public void setOvchipkaarten(List<Ovchipkaart> ovchipkaarten) {
+        this.ovchipkaarten = ovchipkaarten;
     }
 
-    public void addOvchipkaart(Ovchipkaart ovchipkaart) {
-        this.ovchipkaart.add(ovchipkaart);
+    public void addOvchipkaarten(Ovchipkaart ovchipkaarten) {
+        this.ovchipkaarten.add(ovchipkaarten);
     }
 
     @Override

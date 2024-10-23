@@ -12,5 +12,9 @@ public interface OvchipkaartDAO {
     Ovchipkaart findById(int id);
 
     List<Ovchipkaart> findAll();
+
+    Ovchipkaart save(Ovchipkaart ovchipkaart);
+    Ovchipkaart update(Ovchipkaart ovchipkaart);
+    boolean delete(Ovchipkaart ovchipkaart);
 }
 

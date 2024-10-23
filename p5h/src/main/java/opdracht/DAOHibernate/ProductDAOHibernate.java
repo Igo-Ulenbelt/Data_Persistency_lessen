@@ -36,6 +36,22 @@ public class ProductDAOHibernate implements ProductDAO {
         }
     }
 
+    // Find by id
+    public Product findById(int id) {
+        try {
+            Product product = entityManager.find(Product.class, id);
+            if (product == null) {
+                System.out.println("No Product found for id: " + id);
+                return null;
+            } else {
+                return product;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     // Add a relationship between Product and OVChipkaart
     public Boolean addOVChipkaart(Product product, Ovchipkaart ovchipkaart) {
         try {
@@ -95,6 +111,21 @@ public class ProductDAOHibernate implements ProductDAO {
             e.printStackTrace();
             entityManager.getTransaction().rollback();
             return false;
+        }
+    }
+
+    // Delete a relationship between Product and OVChipkaart
+    public void deleteFromManyToMany(Product product) {
+        try {
+            if (!entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().begin();
+            }
+            product.getOvChipkaarten().clear();
+            entityManager.merge(product);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            entityManager.getTransaction().rollback();
         }
     }
 

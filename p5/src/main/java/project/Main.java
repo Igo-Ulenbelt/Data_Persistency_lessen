@@ -55,8 +55,6 @@ public class Main {
     public static void testCodeDAO(ReizigerDAO reizigerDAO, AdresDAO adresDAO, OvchipkaartDAO ovchipkaartDAO, ProductDAO productdao) {
         Reiziger harry = new Reiziger(77, "H", "", "Boers", java.sql.Date.valueOf("1983-04-13"));
         Adres harrysAdres = new Adres(77, "8014EP", "10bis", "Tuinmeesterlaan", "Dalfsen", harry);
-        harry.setAdres(harrysAdres);
-        harry.getAdres();
 
         Ovchipkaart harryOvkaart1 = new Ovchipkaart(77777, java.sql.Date.valueOf("2020-02-22"), 2, (float) 87.88, harry);
         Ovchipkaart harryOvkaart2 = new Ovchipkaart(77778, java.sql.Date.valueOf("2021-01-11"), 1, (float) 12.23, harry);

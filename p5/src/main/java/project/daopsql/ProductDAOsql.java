@@ -71,6 +71,27 @@ public class ProductDAOsql implements ProductDAO {
         return products;
     }
 
+    // Find by id
+    public Product findById(int id) {
+        String query = "SELECT * FROM product WHERE product_nummer = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet set = statement.executeQuery();
+            if (set != null && set.next()) {
+                return new Product(
+                        set.getInt("product_nummer"),
+                        set.getString("naam"),
+                        set.getString("beschrijving"),
+                        set.getDouble("prijs")
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
     @Override
     public boolean addOVChipkaart(Product product, Ovchipkaart ovChipkaart, String status) {
         String query = "INSERT INTO ov_chipkaart_product (kaart_nummer, product_nummer, status) VALUES (?, ?, ?)";

@@ -27,6 +27,7 @@ public class Product {
         this.naam = naam;
         this.beschrijving = beschrijving;
         this.prijs = prijs;
+        this.ovChipkaarten = new ArrayList<>();
     }
 
     public Product() {
@@ -78,11 +79,10 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", naam='" + naam + '\'' +
+        return "\nProduct: " +
+                "productNummer=" + id +
+                ", productNaam='" + naam + '\'' +
                 ", beschrijving='" + beschrijving + '\'' +
-                ", prijs=" + prijs +
-                '}';
+                ", prijs=" + prijs;
     }
 }

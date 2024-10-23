@@ -75,13 +75,17 @@ public class Ovchipkaart {
                 productenString += product.toString();
             }
         } else {
-            productenString = "Geen producten gevonden";
+            productenString = "\nGeen producten gevonden";
         }
         return productenString;
     }
 
-    public void setProducten(List<Product> byOVChipkaart) {
-        this.producten = byOVChipkaart;
+    public List<Product> getProducten() {
+        return producten;
+    }
+
+    public void setProducten(List<Product> producten) {
+        this.producten = producten;
     }
 
     @Override

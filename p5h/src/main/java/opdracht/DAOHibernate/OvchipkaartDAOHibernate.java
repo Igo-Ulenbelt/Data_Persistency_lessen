@@ -54,4 +54,46 @@ public class OvchipkaartDAOHibernate implements OvchipkaartDAO {
     public List<Ovchipkaart> findAll() {
         return entityManager.createQuery("SELECT ovchipkaart FROM Ovchipkaart ovchipkaart", Ovchipkaart.class).getResultList();
     }
+
+    public Ovchipkaart save(Ovchipkaart ovchipkaart) {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.merge(ovchipkaart);
+            entityManager.getTransaction().commit();
+            return ovchipkaart;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Modify a database entry
+    public Ovchipkaart update(Ovchipkaart ovchipkaart) {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.merge(ovchipkaart);
+            entityManager.getTransaction().commit();
+            return ovchipkaart;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Delete a database entry
+    public boolean delete(Ovchipkaart ovchipkaart) {
+        try {
+            if (!entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().begin();
+            }
+            Ovchipkaart managedovchipkaart = entityManager.merge(ovchipkaart);
+            entityManager.remove(managedovchipkaart);
+            entityManager.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            entityManager.getTransaction().rollback();
+            return false;
+        }
+    }
 }
